@@ -24,10 +24,10 @@ export let Signup = () => {
 
     return (
         <>
-            <div className="bg-blue-100 w-[500px] h-[600px] shadow-lg rounded-lg m-auto flex flex-col justify-center items-center gap-4 p-4">
+            <div className="bg-blue-100 w-[500px] h-[auto] shadow-lg rounded-lg m-auto flex flex-col justify-center items-center gap-10 p-4">
                 <div className="text-4xl font-extrabold">WELCOME</div>
                 <div className="text-4xl font-bold">Signup to get started....</div>
-                <form >
+                <form className="flex flex-col justify-center gap-5" >
                 <Input
                     label="Full Name"
                     placeholder="Enter your Full Name"
