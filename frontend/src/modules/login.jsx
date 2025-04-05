@@ -1,7 +1,7 @@
 import { Input } from "../components/input"
 import { Button } from "../components/button"
 import { useNavigate } from "react-router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 export const Login = () => {
 
@@ -18,11 +18,25 @@ export const Login = () => {
         });
     };   
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault()
-        console.log(user);
+        const res = await fetch("http://localhost:5000/user/login",{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(user),
+        })
+        const data = await res.json()
+        if(data.token){
+            localStorage.setItem("token",data.token)
+            localStorage.setItem("user",JSON.stringify(data.user))
+            navigate("/")
+        }
+        else{
+            alert(data.msg)
+        }
     }
-
     
     return(
             <>

@@ -5,7 +5,7 @@ import { useState } from "react";
 
 export let Signup = () => {
     let [user, setUser] = useState({
-        name: "",
+        fullname: "",
         email: "",
         password: "",
     });
@@ -18,8 +18,18 @@ export let Signup = () => {
         });
     };    
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
+        e.preventDefault()
         console.log(user);
+        const res = await fetch("http://localhost:5000/user/signup",{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(user),
+        })
+        const data = await res.json()
+        console.log(data);
     }
 
     return (
@@ -27,12 +37,12 @@ export let Signup = () => {
             <div className="bg-blue-100 w-[500px] h-[auto] shadow-lg rounded-lg m-auto flex flex-col justify-center items-center gap-10 p-4">
                 <div className="text-4xl font-extrabold">WELCOME</div>
                 <div className="text-4xl font-bold">Signup to get started....</div>
-                <form className="flex flex-col justify-center gap-5" >
+                <form className="flex flex-col justify-center gap-5" onSubmit={handleSubmit} >
                 <Input
                     label="Full Name"
                     placeholder="Enter your Full Name"
-                    name="name"
-                    value={user.name}
+                    name="fullname"
+                    value={user.fullname}
                     isRequired={true}
                     onchange = {handleChange}
                 />
@@ -54,7 +64,7 @@ export let Signup = () => {
                     isRequired={true}
                     onchange = {handleChange}
                 />
-                <Button label="Sign Up" className="w-[50%]" />
+                <Button label="Sign Up" className="w-[50%]" type="submit" />
                 <div>
                     Already Have An Account..?{" "}
                     <span

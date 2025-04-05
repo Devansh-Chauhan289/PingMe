@@ -4,7 +4,6 @@ import { model, Schema } from "mongoose";
 const  Messages = new Schema({
     convoId : {
         type : String,
-        required : true,
     },
     senderId : {
         type : String,

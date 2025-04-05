@@ -8,12 +8,12 @@ import { Dashboard } from './modules/Dashboard/dashboard'
 function App() {
 
   const ProtectedRoutes = ({children}) => {
-    const isAuthenticated = localStorage.getItem('token') !== null || true
+    const isAuthenticated = localStorage.getItem('token') !== null || false
     if(!isAuthenticated) {
       return <Navigate to='/login' />
     }
-    else if(isAuthenticated && [ `/login`,`/signup`].includes(window.location.pathname)){
-        return <Navigate to='/' />
+    else if (isAuthenticated && window.location.pathname === '/login') {
+      return <Navigate to="/" />;
     }
     return children
   }
@@ -22,19 +22,15 @@ function App() {
     <>
     <Routes>
       <Route path='/signup' element = {
-        <ProtectedRoutes>
           <Signup/>
-        </ProtectedRoutes>
       } />
       <Route path='/login' element = {
-        <ProtectedRoutes>
           <Login/>
-        </ProtectedRoutes>
       } />
       <Route path='/' element = {
-        <ProtectedRoutes>
+    
           <Dashboard/>
-        </ProtectedRoutes>
+        
       } />
     </Routes>
       
