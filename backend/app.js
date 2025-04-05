@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import { UserRouter } from "./src/routes/userRouter.js";
+import { convoRouter } from "./src/routes/convoRouter.js";
 
 
 const app = express();
@@ -11,6 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/user",UserRouter)
+app.use("/",convoRouter)
 
 app.listen(PORT, () => {
     try {

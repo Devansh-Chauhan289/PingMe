@@ -102,7 +102,9 @@ const UserLogin = async(req,res) => {
         await user.save()
 
         return res.status(201).json({
+
             msg : "User loggedIn Successfully",
+            user,
             token : Authtoken
         })
         
