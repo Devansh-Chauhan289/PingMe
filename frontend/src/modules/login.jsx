@@ -66,7 +66,7 @@ export const Login = () => {
               />
     
             <Button type="submit" label="Sign Up" className="w-[50%]"/>
-            <div>Doesn't Have An Account..? <span onClick={()=> navigate("/signup")} className="cursor-pointer text-blue-500 underline">Sign Up</span></div>
+            <div>Doesn't Have An Account..? <span onClick={()=> navigate("/")} className="cursor-pointer text-blue-500 underline">Sign Up</span></div>
             
             
             </form>
