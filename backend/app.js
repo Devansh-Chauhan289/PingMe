@@ -6,13 +6,14 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { createServer } from "http";
 import { Server } from 'socket.io';
+import { Users } from "./src/models/userModels.js";
 
 dotenv.config();
 
 const app = express();
 const httpServer = createServer(app);
 
-// Initialize Socket.IO
+
 const io = new Server(httpServer, {
     cors: {
         origin: ["http://localhost:3000", "http://localhost:5173", "http://127.0.0.1:5173"],
@@ -20,29 +21,41 @@ const io = new Server(httpServer, {
     }
 });
 
+
+const onlineUsers = new Map();
+
 io.on("connection", (socket) => {
     console.log("User connected", socket.id);
     
-    //Add user to conversation
-    // Join a conversation
+    
+    
+    socket.on("Add-user", (userId) => {
+        if (userId) {
+            onlineUsers.set(userId, socket.id);
+            console.log(`User ${userId} is now online`);
+            io.emit("getUsers", Array.from(onlineUsers.keys()));
+        }
+    });
+    
+   
     socket.on("join_conversation", (conversationId) => {
         socket.join(conversationId);
         console.log(`User ${socket.id} joined conversation: ${conversationId}`);
     });
     
-    // Leave a conversation
+    
     socket.on("leave_conversation", (conversationId) => {
         socket.leave(conversationId);
         console.log(`User ${socket.id} left conversation: ${conversationId}`);
     });
     
-    // Send a message
+    
     socket.on("send_message", (data) => {
         io.to(data.conversationId).emit("receive_message", data);
         console.log(`Message sent in conversation ${data.conversationId}:`, data);
     });
     
-    // User typing
+    
     socket.on("typing", (data) => {
         socket.to(data.conversationId).emit("user_typing", {
             userId: data.userId,
@@ -50,19 +63,39 @@ io.on("connection", (socket) => {
         });
     });
     
-    // User online status
+    
     socket.on("user_online", (userId) => {
-        socket.broadcast.emit("user_status", { userId, status: "online" });
+        if (userId) {
+            onlineUsers.set(userId, socket.id);
+            socket.broadcast.emit("user_status", { userId, status: "online" });
+            
+            io.emit("getUsers", Array.from(onlineUsers.keys()));
+        }
     });
     
-    // User offline status
+    
     socket.on("user_offline", (userId) => {
-        socket.broadcast.emit("user_status", { userId, status: "offline" });
+        if (userId) {
+            onlineUsers.delete(userId);
+            socket.broadcast.emit("user_status", { userId, status: "offline" });
+            
+            io.emit("getUsers", Array.from(onlineUsers.keys()));
+        }
     });
     
-    // Disconnect
+    
     socket.on("disconnect", () => {
         console.log("User disconnected:", socket.id);
+       
+        for (const [userId, socketId] of onlineUsers.entries()) {
+            if (socketId === socket.id) {
+                onlineUsers.delete(userId);
+                socket.broadcast.emit("user_status", { userId, status: "offline" });
+                
+                io.emit("getUsers", Array.from(onlineUsers.keys()));
+                break;
+            }
+        }
     });
 });
 
@@ -75,7 +108,7 @@ app.use(cors())
 app.use("/user", UserRouter)
 app.use("/", convoRouter)
 
-// Use httpServer.listen instead of app.listen
+
 httpServer.listen(PORT, () => {
     try {
         mongoose.connect(process.env.DB_URL)

@@ -18,10 +18,11 @@ export const Dashboard = () => {
     const [users, setusers] = useState([]);
     const [isTyping, setIsTyping] = useState(false);
     const [userStatus, setUserStatus] = useState({});
+    const [onlineUsers, setOnlineUsers] = useState([]);
     const currentConversationRef = useRef(null);
     const typingTimeoutRef = useRef(null);
 
-    // Initialize socket connection
+    // socket connection code
     useEffect(() => {
         if (user && user._id) {
             console.log("Initializing socket connection for user:", user._id);
@@ -33,10 +34,19 @@ export const Dashboard = () => {
             });
             setSocket(newSocket);
             
-            // Set up event listeners
+            
+            newSocket.emit("Add-user", user._id);
+            
+            
+            newSocket.on("getUsers", (users) => {
+                console.log("Online users:", users);
+                setOnlineUsers(users);
+            });
+            
+            
             newSocket.on("connect", () => {
                 console.log("Connected to Socket.IO server with ID:", newSocket.id);
-                // Emit user online status
+                
                 newSocket.emit("user_online", user._id);
             });
             
@@ -50,11 +60,11 @@ export const Dashboard = () => {
             
             newSocket.on("receive_message", (data) => {
                 if (data.conversationId === currentConversationRef.current) {
-                    // Update messages if we're in the current conversation
+                    
                     setmsg(prevMsg => ({
                         ...prevMsg,
                         msg: [...(prevMsg.msg || []), {
-                            _id: Date.now().toString(), // Temporary ID
+                            _id: Date.now().toString(), 
                             senderId: data.senderId,
                             msg: data.message,
                             timestamp: data.timestamp
@@ -77,7 +87,7 @@ export const Dashboard = () => {
             });
             
             return () => {
-                // Clean up socket connection
+                
                 if (currentConversationRef.current) {
                     newSocket.emit("leave_conversation", currentConversationRef.current);
                 }
@@ -102,12 +112,12 @@ export const Dashboard = () => {
     }
 
     async function fetchConvo(convoId, userData) {
-        // Leave previous conversation if any
+       
         if (currentConversationRef.current && socket) {
             socket.emit("leave_conversation", currentConversationRef.current);
         }
         
-        // Join new conversation
+        
         if (convoId !== "new" && socket) {
             currentConversationRef.current = convoId;
             socket.emit("join_conversation", convoId);
@@ -124,15 +134,13 @@ export const Dashboard = () => {
             const data = await res.json();
             console.log("Conversation data:", data);
             
-            // If this is a new conversation and we got an empty array, we need to create a new conversation
             if (convoId === "new" && data.length === 0) {
-                console.log("Creating new conversation with:", userData.id);
-                // We'll create the conversation when the first message is sent
+                console.log("Creating new conversation", userData.id);
                 setmsg({
                     msg: [],
                     userData: {
                         ...userData,
-                        convoId: "new" // Mark as new conversation
+                        convoId: "new"
                     }
                 });
             } else {
@@ -167,7 +175,6 @@ export const Dashboard = () => {
             const data = await res.json();
             console.log("Message sent response:", data);
             
-            // If this is a new conversation, update the conversation ID
             if (data.convoId && data.convoId !== msg.userData.convoId) {
                 console.log("New conversation created with ID:", data.convoId);
                 setmsg(prev => ({
@@ -181,9 +188,11 @@ export const Dashboard = () => {
                 if (socket) {
                     socket.emit("join_conversation", data.convoId);
                 }
+                
+                
+                getconvo(user._id);
             }
             
-            // Send message through socket
             if (socket) {
                 socket.emit("send_message", {
                     conversationId: msg.userData.convoId === "new" ? data.convoId : msg.userData.convoId,
@@ -200,16 +209,14 @@ export const Dashboard = () => {
         }
     }
 
-    // Handle typing status
+    
     const handleTyping = (e) => {
         setmymsg(e.target.value);
         
-        // Clear previous timeout
         if (typingTimeoutRef.current) {
             clearTimeout(typingTimeoutRef.current);
         }
         
-        // Send typing status
         if (msg.userData && msg.userData.convoId && socket) {
             socket.emit("typing", {
                 conversationId: msg.userData.convoId,
@@ -217,7 +224,6 @@ export const Dashboard = () => {
                 isTyping: true
             });
             
-            // Set timeout to stop typing status after 2 seconds
             typingTimeoutRef.current = setTimeout(() => {
                 socket.emit("typing", {
                     conversationId: msg.userData.convoId,
@@ -250,6 +256,11 @@ export const Dashboard = () => {
         getUsers();
     }, []);
 
+    
+    const filteredUsers = users.filter(user => {
+        return !convo.some(conv => conv.userData.id === user.id);
+    });
+
     console.log(msg);
 
     return (
@@ -280,7 +291,7 @@ export const Dashboard = () => {
                                         <h3 className="text-4xl">{userData.fullname}</h3>
                                         <p className="text-xl font-light">{userData.email}</p>
                                         <p className="text-sm text-gray-500">
-                                            {userStatus[userData.id] === 'online' ? 'Online' : 'Offline'}
+                                            {onlineUsers.includes(userData.id) ? 'Online' : 'Offline'}
                                         </p>
                                     </div>
                                 </div>
@@ -303,7 +314,7 @@ export const Dashboard = () => {
                                     <div className="mr-auto">
                                         <h3 className="text-4xl">{msg.userData.fullname}</h3>
                                         <p className="text-xl font-light">
-                                            {isTyping ? 'Typing...' : userStatus[msg.userData.id] === 'online' ? 'Online' : 'Offline'}
+                                            {isTyping ? 'Typing...' : onlineUsers.includes(msg.userData.id) ? 'Online' : 'Offline'}
                                         </p>
                                     </div>
                                     <div>
@@ -355,8 +366,8 @@ export const Dashboard = () => {
                 <div className="w-[25%] h-screen">
                 <div className="text-blue-400 text-2xl ml-10 mt-10 align-center">Peoples</div>
                     <div className="ml-10">
-                        {users.length > 0 ? (
-                            users.map((ele) => (
+                        {filteredUsers.length > 0 ? (
+                            filteredUsers.map((ele) => (
                             
                                 <div 
                                     onClick={() => fetchConvo("new",ele)}
@@ -368,7 +379,7 @@ export const Dashboard = () => {
                                         <h3 className="text-4xl">{ele.fullname}</h3>
                                         <p className="text-xl font-light">{ele.email}</p>
                                         <p className="text-sm text-gray-500">
-                                            {userStatus[ele.id] === 'online' ? 'Online' : 'Offline'}
+                                            {onlineUsers.includes(ele.id) ? 'Online' : 'Offline'}
                                         </p>
                                     </div>
                                 </div>

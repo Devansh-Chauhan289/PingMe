@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Routes,Route, Navigate } from 'react-router'
+import { Routes, Route, Navigate } from 'react-router'
 import './App.css'
 import { Signup } from './modules/Form/signup'
 import { Login } from './modules/login'
@@ -12,8 +12,13 @@ function App() {
     if(!isAuthenticated) {
       return <Navigate to='/login' />
     }
-    else if (isAuthenticated && window.location.pathname === '/login') {
-      return <Navigate to="/" />;
+    return children
+  }
+
+  const PublicRoutes = ({children}) => {
+    const isAuthenticated = localStorage.getItem('token') !== null || false
+    if(isAuthenticated) {
+      return <Navigate to="/dash" />
     }
     return children
   }
@@ -21,16 +26,20 @@ function App() {
   return (
     <>
     <Routes>
-      <Route path='/signup' element = {
+      <Route path='/' element={
+        <PublicRoutes>
           <Signup/>
+        </PublicRoutes>
       } />
-      <Route path='/login' element = {
+      <Route path='/login' element={
+        <PublicRoutes>
           <Login/>
+        </PublicRoutes>
       } />
-      <Route path='/' element = {
-    
+      <Route path='/dash' element={
+        <ProtectedRoutes>
           <Dashboard/>
-        
+        </ProtectedRoutes>
       } />
     </Routes>
       

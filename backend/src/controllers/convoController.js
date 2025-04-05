@@ -1,7 +1,7 @@
 import { ConvoModel } from "../models/convoModel.js";
 import { MsgModel } from "../models/messageModel.js";
 import { Users } from "../models/userModels.js";
-import { getIO } from "../socket/socket.js";
+
 
 
 const StartConvo = async(req,res) => {
