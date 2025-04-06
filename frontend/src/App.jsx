@@ -37,9 +37,9 @@ function App() {
         </PublicRoutes>
       } />
       <Route path='/dash' element={
-        <ProtectedRoutes>
+        <PublicRoutes>
           <Dashboard/>
-        </ProtectedRoutes>
+        </PublicRoutes>
       } />
     </Routes>
       
