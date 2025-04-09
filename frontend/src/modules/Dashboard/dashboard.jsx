@@ -98,7 +98,7 @@ export const Dashboard = () => {
 
     async function getconvo(userId) {
         console.log(userId);
-        const res = await fetch(`pingme-production-85ec.up.railway.app/getconvo/${userId}`, {
+        const res = await fetch(`https://pingme-production-85ec.up.railway.app/getconvo/${userId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -124,7 +124,7 @@ export const Dashboard = () => {
         }
         
         try {
-            const res = await fetch(`pingme-production-85ec.up.railway.app/getmsg/${convoId}?senderId=${user._id}&receiverId=${userData.id}`, {
+            const res = await fetch(`https://pingme-production-85ec.up.railway.app/getmsg/${convoId}?senderId=${user._id}&receiverId=${userData.id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -159,7 +159,7 @@ export const Dashboard = () => {
         
         console.log("Sending message to:", msg.userData.id);
         try {
-            const res = await fetch(`pingme-production-85ec.up.railway.app/message`, {
+            const res = await fetch(`https://pingme-production-85ec.up.railway.app/message`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -235,7 +235,7 @@ export const Dashboard = () => {
     };
 
     async function getUsers() {
-        const res = await fetch(`pingme-production-85ec.up.railway.app/getusers/${user._id}`, {
+        const res = await fetch(`https://pingme-production-85ec.up.railway.app/getusers/${user._id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"

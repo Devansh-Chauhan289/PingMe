@@ -9,6 +9,8 @@ export let Signup = () => {
         email: "",
         password: "",
     });
+    let [error, setError] = useState("");
+    let [loading, setLoading] = useState(false);
     let navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -16,20 +18,42 @@ export let Signup = () => {
             ...user,
             [e.target.name]: e.target.value,
         });
+        // Clear error when user starts typing
+        if (error) setError("");
     };    
 
     const handleSubmit = async(e) => {
-        e.preventDefault()
-        console.log(user);
-        const res = await fetch("pingme-production-85ec.up.railway.app/user/signup",{
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(user),
-        })
-        const data = await res.json()
-        console.log(data);
+        e.preventDefault();
+        setLoading(true);
+        setError("");
+        
+        try {
+            const res = await fetch("https://pingme-production-85ec.up.railway.app/user/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(user),
+            });
+            
+            const data = await res.json();
+            
+            if (!res.ok) {
+                throw new Error(data.msg || "Signup failed");
+            }
+            
+            console.log(data);
+            
+            // If signup successful, navigate to login
+            if (data.success) {
+                navigate("/login");
+            }
+        } catch (error) {
+            console.error("Error during signup:", error);
+            setError(error.message || "An error occurred during signup");
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
@@ -37,7 +61,12 @@ export let Signup = () => {
             <div className="bg-blue-100 w-[500px] h-[auto] shadow-lg rounded-lg m-auto flex flex-col justify-center items-center gap-10 p-4">
                 <div className="text-4xl font-extrabold">WELCOME</div>
                 <div className="text-4xl font-bold">Signup to get started....</div>
-                <form className="flex flex-col justify-center gap-5" onSubmit={handleSubmit} >
+                {error && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative w-full" role="alert">
+                        <span className="block sm:inline">{error}</span>
+                    </div>
+                )}
+                <form className="flex flex-col justify-center gap-5 w-full" onSubmit={handleSubmit} >
                 <Input
                     label="Full Name"
                     placeholder="Enter your Full Name"
@@ -64,7 +93,12 @@ export let Signup = () => {
                     isRequired={true}
                     onchange = {handleChange}
                 />
-                <Button label="Sign Up" className="w-[50%]" type="submit" />
+                <Button 
+                    label={loading ? "Signing up..." : "Sign Up"} 
+                    className="w-[50%]" 
+                    type="submit" 
+                    disabled={loading}
+                />
                 <div>
                     Already Have An Account..?{" "}
                     <span
