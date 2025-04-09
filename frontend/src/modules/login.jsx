@@ -20,7 +20,7 @@ export const Login = () => {
 
     const handleSubmit = async(e) => {
         e.preventDefault()
-        const res = await fetch("http://localhost:5000/user/login",{
+        const res = await fetch("pingme-production-85ec.up.railway.app/user/login",{
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

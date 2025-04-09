@@ -21,7 +21,7 @@ export let Signup = () => {
     const handleSubmit = async(e) => {
         e.preventDefault()
         console.log(user);
-        const res = await fetch("http://localhost:5000/user/signup",{
+        const res = await fetch("pingme-production-85ec.up.railway.app/user/signup",{
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
