@@ -49,11 +49,12 @@ function App() {
         // Check if token is not expired
         if (decodedToken.exp * 1000 > Date.now()) {
           // Token is valid, redirect to dashboard
-          return <Navigate to="/dash" />
+          return <Navigate to="/" />
         } else {
           // Token is expired, remove it
           localStorage.removeItem('token');
           localStorage.removeItem('user');
+          <Navigate to={"/login"}/>
         }
       } catch (error) {
         // Token is invalid, remove it
@@ -69,7 +70,7 @@ function App() {
   return (
     <>
     <Routes>
-      <Route path='/' element={
+      <Route path='/signup' element={
         <PublicRoutes>
           <Signup/>
         </PublicRoutes>
@@ -79,7 +80,7 @@ function App() {
           <Login/>
         </PublicRoutes>
       } />
-      <Route path='/dash' element={
+      <Route path='/' element={
         <ProtectedRoutes>
           <Dashboard/>
         </ProtectedRoutes>
