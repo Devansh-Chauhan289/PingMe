@@ -2,7 +2,7 @@ import { Input } from "../components/input"
 import { Button } from "../components/button"
 import { useNavigate } from "react-router"
 import { useEffect, useState } from "react"
-import {Oval} from "react-loader-spinner"
+import  {MoonLoader} from "react-spinners"
 
 export const Login = () => {
 

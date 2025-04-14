@@ -1,6 +1,6 @@
 import avatar from "../../assets/man.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperPlane, faPhone,faB, faMessage} from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane, faPhone, faMessage} from "@fortawesome/free-solid-svg-icons";
 
 import { Input } from "../../components/input";
 import { useEffect, useState, useRef } from "react";
