@@ -1,6 +1,7 @@
 import avatar from "../../assets/man.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperPlane, faPhone } from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane, faPhone,faB, faMessage} from "@fortawesome/free-solid-svg-icons";
+
 import { Input } from "../../components/input";
 import { useEffect, useState, useRef } from "react";
 import { io } from "socket.io-client";
@@ -21,6 +22,7 @@ export const Dashboard = () => {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const currentConversationRef = useRef(null);
     const typingTimeoutRef = useRef(null);
+    const lstmsg = useRef(null)
 
     // socket connection code
     useEffect(() => {
@@ -96,6 +98,12 @@ export const Dashboard = () => {
         }
     }, [user]);
 
+    useEffect(() => {
+        if (lstmsg.current) {
+            lstmsg.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [msg.msg]);
+
     async function getconvo(userId) {
         console.log(userId);
         const res = await fetch(`https://pingme-production-85ec.up.railway.app/getconvo/${userId}`, {
@@ -154,7 +162,8 @@ export const Dashboard = () => {
         }
     }
 
-    async function sendMsg() {
+    async function sendMsg(e) {
+        e.preventDefault()
         if (!mymsg.trim()) return;
         
         console.log("Sending message to:", msg.userData.id);
@@ -243,7 +252,6 @@ export const Dashboard = () => {
         });
         const data = await res.json();
         setusers(data);
-        console.log(data);
     }
 
     useEffect(() => {
@@ -261,11 +269,11 @@ export const Dashboard = () => {
         return !convo.some(conv => conv.userData.id === user.id);
     });
 
-    console.log(msg);
+    
 
     return (
         <>
-            <div className="w-screen flex">
+            <div className="w-screen flex  ">
                 <div className="w-[25%] h-screen">
                     <div className="flex justify-center items-center my-8">
                         <img src={avatar} width={75} height={75} />
@@ -275,8 +283,8 @@ export const Dashboard = () => {
                         </div>
                     </div>
                     <hr />
-                    <div className="text-blue-400 text-2xl ml-10 mt-10 align-center">Messages</div>
-                    <div className="ml-10">
+                    <div className="text-blue-400 text-2xl ml-10 mt-10 align-center ">Messages</div>
+                    <div className="ml-10  h-[calc(100vh-200px)] overflow-y-scroll">
                         {convo.length > 0 ? (
                             
                             convo.map(({userData}) => (
@@ -303,7 +311,11 @@ export const Dashboard = () => {
                     </div>
                 </div>
                 <div className="w-[50%] h-screen bg-white flex flex-col justify-center items-center">
-                    <div className="w-[75%] h-[80px] bg-gray-200 m-auto mt-10 rounded-full p-10 flex align-center items-center gap-5">
+                    {
+                         msg && msg.userData && msg.userData.convoId ? (
+                    <>
+                            
+                        <div className={`w-[75%] h-[80px] bg-gray-200 m-auto mt-10 rounded-full p-10 align-center items-center gap-5 flex`}>
                         {
                             msg && msg.userData && msg.userData.convoId ? (
                                 
@@ -326,18 +338,20 @@ export const Dashboard = () => {
                                 <div></div>
                             )
                         }
-                    </div>
+                        </div>
 
-                    <div className="w-full overflow-scroll mt-10 py-10">
-                        <div className="h-[1000px] px-10 py-14">
+                        <div className="w-full overflow-y-scroll mt-10 ">
+                        <div className=" px-10 ">
                             {   
                                 msg && msg.msg && msg.msg.length > 0 ?(
                                     
-                                    msg.msg.map((mes) => {
+                                    msg.msg.map((mes,index) => {
+                                        const islstMsg = index === msg.msg.length -1
                                         return(
                                                 <div
                                                     key={mes._id}
-                                                    className={`h-auto max-w-[60%]  p-5     mb-5 ${
+                                                    ref={islstMsg ? lstmsg : null}
+                                                    className={`h-auto max-w-[60%]      p-5     mb-5 ${
                                                         mes.senderId === user._id ? "ml-auto bg-blue-600 rounded-b-xl rounded-tl-xl text-white"
                                                         :
                                                         "bg-gray-300 mr-auto rounded-b-xl rounded-tr-xl"
@@ -352,16 +366,34 @@ export const Dashboard = () => {
                             }
                         </div>
                     </div>
-                    <div className="py-5 w-full border-t flex items-center">
-                    <Input
-                        placeholder="Type Your Message..."
-                        className="w-full px-4 rounded-full outline-none shadow-xl"
-                        value={mymsg}
-                        onchange={handleTyping}
-                        name="mymsg"
-                    />
-                        <FontAwesomeIcon icon={faPaperPlane} className="text-4xl text-blue-600 cursor-pointer" onClick={sendMsg} />
-                    </div>
+                        <form className="w-full" onSubmit={sendMsg} >
+                            <div className="py-5 w-full flex justify-center align-center items-center">
+                                <Input
+                                placeholder="Type Your Message..."
+                                className="w-full px-4 !rounded-3xl outline-none border-none"
+                                value={mymsg}
+                                onchange={handleTyping}
+                                name="mymsg"
+                                />
+                                <button type="submit"><FontAwesomeIcon icon={faPaperPlane} className="text-4xl text-blue-600 cursor-pointer" onClick={sendMsg} /></button>
+                            </div>
+                        </form>
+                        
+                    </>
+                         ) : (
+                            <>
+                                <div className=" m-auto flex flex-col align-center gap-30">
+                                    <h1 className=" text-[#1d1160] text-4xl font-serif">Select Person To Chat with <br /></h1>
+                                    <FontAwesomeIcon color="blue" size="8x" icon={faMessage} />
+                                </div>
+                            
+                            </>
+                         )
+                    }
+                    
+
+                    
+                    
                 </div>
                 <div className="w-[25%] h-screen">
                 <div className="text-blue-400 text-2xl ml-10 mt-10 align-center">Peoples</div>

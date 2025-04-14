@@ -24,7 +24,7 @@ export let Input = ({
             <input
              type={type} placeholder={placeholder} required = {isRequired}
              name={name} id={name}
-             className={` border-2 border-gray-300 rounded-md p-2 w-full p-2.5 focus:border-red-400 focus:ring-blue-500 block ${className}`}
+             className={`  border-2 border-gray-300 rounded-md p-2 w-full p-2.5 focus:bg-[#E6E6FA] block ${className}`}
             value={value} onChange={onchange}
             />
         </div>
