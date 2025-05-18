@@ -114,6 +114,7 @@ app.use("/", convoRouter)
 
 
 httpServer.listen(PORT, () => {
+    
     try {
         mongoose.connect(process.env.DB_URL)
         console.log("Database connected successfully");
