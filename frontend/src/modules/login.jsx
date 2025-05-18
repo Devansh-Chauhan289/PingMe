@@ -22,7 +22,7 @@ export const Login = () => {
 
     const handleSubmit = async(e) => {
         e.preventDefault()
-        setloading(true)
+    
         const res = await fetch("https://pingme-production-85ec.up.railway.app/user/login",{
             method: "POST",
             headers: {
