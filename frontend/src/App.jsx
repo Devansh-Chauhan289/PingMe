@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Routes, Route, useNavigate } from 'react-router'
+import { Routes, Route, Navigate } from 'react-router'
 import { jwtDecode } from 'jwt-decode'
 import './App.css'
 import { Signup } from './modules/Form/signup'
@@ -7,7 +7,7 @@ import { Login } from './modules/login'
 import { Dashboard } from './modules/Dashboard/dashboard'
 
 function App() {
-  const Navigate = useNavigate()
+  
   const ProtectedRoutes = ({children}) => {
     const token = localStorage.getItem('token');
     
