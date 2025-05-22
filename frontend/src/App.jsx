@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Routes, Route, Navigate } from 'react-router'
+import { Routes, Route, useNavigate } from 'react-router'
 import { jwtDecode } from 'jwt-decode'
 import './App.css'
 import { Signup } from './modules/Form/signup'
