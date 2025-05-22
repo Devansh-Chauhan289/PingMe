@@ -7,7 +7,7 @@ import { Login } from './modules/login'
 import { Dashboard } from './modules/Dashboard/dashboard'
 
 function App() {
-
+  const Navigate = useNavigate()
   const ProtectedRoutes = ({children}) => {
     const token = localStorage.getItem('token');
     
