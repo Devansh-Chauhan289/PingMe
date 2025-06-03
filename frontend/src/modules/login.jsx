@@ -23,7 +23,7 @@ export const Login = () => {
     const handleSubmit = async(e) => {
         e.preventDefault()
     
-        const res = await fetch("https://pingme-server-production.up.railway.app/user/login",{
+        const res = await fetch("https://pingme-server-fdyz.onrender.com/user/login",{
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
