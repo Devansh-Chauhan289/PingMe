@@ -22,7 +22,7 @@ export const Login = () => {
 
     const handleSubmit = async(e) => {
         e.preventDefault()
-    
+        setloading(true)
         const res = await fetch("https://pingme-server-fdyz.onrender.com/user/login",{
             method: "POST",
             headers: {
