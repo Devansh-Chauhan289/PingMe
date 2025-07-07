@@ -7,12 +7,19 @@ import cors from "cors";
 import { createServer } from "http";
 import { Server } from 'socket.io';
 import { Users } from "./src/models/userModels.js";
+import rateLimit from "express-rate-limit";
 
 dotenv.config();
 
 const app = express();
 const httpServer = createServer(app);
-
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again later.",
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
 
 const io = new Server(httpServer, {
     cors: {
@@ -108,6 +115,7 @@ app.use(cors({
     methods: ["GET", "POST"],
     credentials: true
 }))
+app.use(limiter);
 
 app.use("/user", UserRouter)
 app.use("/", convoRouter)
