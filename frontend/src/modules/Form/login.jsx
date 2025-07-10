@@ -1,8 +1,10 @@
-import { Input } from "../components/input"
-import { Button } from "../components/button"
+import { Input } from "../../components/input"
+import { Button } from "../../components/button"
 import { useNavigate } from "react-router"
 import { useEffect, useState } from "react"
 import  {MoonLoader} from "react-spinners"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faEye,faEyeSlash } from "@fortawesome/free-solid-svg-icons"
 
 export const Login = () => {
 
@@ -12,6 +14,7 @@ export const Login = () => {
         email: "",
         password: "",
     });
+    let [seepsw,setseepsw] = useState(false)
 
     const handlechange = (e) => {
         setUser({
@@ -23,7 +26,7 @@ export const Login = () => {
     const handleSubmit = async(e) => {
         e.preventDefault()
         setloading(true)
-        const res = await fetch("https://pingme-server-fdyz.onrender.com/user/login",{
+        const res = await fetch("http://localhost:5000/user/login",{
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -52,16 +55,23 @@ export const Login = () => {
                     Already with us..? then Sign In </h1>
 
                     <Input placeholder="Enter your Email" name="email"className="text" value={user.email} onchange={handlechange} type="email" />
+                    <div className="flex items-center gap-[10px]">
+                        <Input
+                        placeholder="Enter your Password" 
+                        name="password" 
+                        className="text" 
+                        value={user.password} onchange={handlechange} type={seepsw ? "text" : "password"}  />
 
-                    <Input
-                     placeholder="Enter your Password" 
-                     name="password" 
-                     className="text" 
-                     value={user.password} onchange={handlechange} type="password" />
+                        <FontAwesomeIcon onClick={() => setseepsw(!seepsw)} icon={seepsw ? faEye : faEyeSlash} color="midnightblue"/>
+                        
+                    </div>
+                    
                     <Button type="Submit" loading = {loading} label={loading ? "Signing In..": "Sign In"} />
+                    <h1 >Forgot Password .. ?</h1>
                     <h1>Don't Have a account..? <b onClick={()=> navigate("/signup")} className="text-[#191970] hover:underline cursor-pointer">SIGN UP</b></h1>
                 </form>
             </div>
+            
         </div>
             </>
         )

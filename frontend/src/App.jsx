@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from 'react-router'
 import { jwtDecode } from 'jwt-decode'
 import './App.css'
 import { Signup } from './modules/Form/signup'
-import { Login } from './modules/login'
+import { Login } from './modules/Form/login'
 import { Dashboard } from './modules/Dashboard/dashboard'
 
 function App() {
