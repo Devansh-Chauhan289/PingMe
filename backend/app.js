@@ -24,7 +24,7 @@ const limiter = rateLimit({
 const io = new Server(httpServer, {
     cors: {
         origin: ["https://ping-me-client.vercel.app", "http://localhost:5173"],
-        methods: ["GET", "POST"]
+        methods: ["GET", "POST","PUT"]
     }
 });
 
@@ -112,7 +112,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     origin: ["https://ping-me-client.vercel.app", "http://localhost:5173"],
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST","PUT"],
     credentials: true
 }))
 app.use(limiter);

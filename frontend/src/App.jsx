@@ -5,6 +5,7 @@ import './App.css'
 import { Signup } from './modules/Form/signup'
 import { Login } from './modules/Form/login'
 import { Dashboard } from './modules/Dashboard/dashboard'
+import { ForgetPsw } from './modules/Form/forget'
 
 function App() {
   
@@ -84,6 +85,11 @@ function App() {
         <ProtectedRoutes>
           <Dashboard/>
         </ProtectedRoutes>
+      } />
+      <Route path='/forgot' element={
+        <PublicRoutes>
+          <ForgetPsw/>
+        </PublicRoutes>
       } />
     </Routes>
       

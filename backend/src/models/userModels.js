@@ -23,6 +23,12 @@ const userschema = new Schema({
     },
     pfp : {
         type : String,
+    },
+    resetExp : {
+        type : Number,
+    },
+    resetToken : {
+        type : Number,
     }
 })
 

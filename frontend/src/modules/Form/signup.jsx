@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { useState } from "react";
 
 export let Signup = () => {
+    let URL = import.meta.env.VITE_SERVER_URL
     let [user, setUser] = useState({
         fullname: "",
         email: "",
@@ -28,7 +29,7 @@ export let Signup = () => {
         setError("");
         
         try {
-            const res = await fetch("https://pingme-server-fdyz.onrender.com/user/signup", {
+            const res = await fetch(`${URL}/user/signup`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -6,6 +6,7 @@ import  {MoonLoader} from "react-spinners"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faEye,faEyeSlash } from "@fortawesome/free-solid-svg-icons"
 
+
 export const Login = () => {
 
     let navigate = useNavigate()
@@ -23,10 +24,12 @@ export const Login = () => {
         });
     };   
 
+    let URL = import.meta.env.VITE_SERVER_URL
+
     const handleSubmit = async(e) => {
         e.preventDefault()
         setloading(true)
-        const res = await fetch("https://pingme-server-fdyz.onrender.com/user/login",{
+        const res = await fetch(`${URL}/user/login`,{
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -42,6 +45,7 @@ export const Login = () => {
         else{
             alert(data.msg)
         }
+        console.log(URL);
         setloading(false)
     }
     
@@ -62,12 +66,12 @@ export const Login = () => {
                         className="text" 
                         value={user.password} onchange={handlechange} type={seepsw ? "text" : "password"}  />
 
-                        <FontAwesomeIcon onClick={() => setseepsw(!seepsw)} icon={seepsw ? faEye : faEyeSlash} color="midnightblue"/>
+                        <FontAwesomeIcon className="cursor-pointer hover:bg-gray-300 p-[10px] rounded-[10px]" onClick={() => setseepsw(!seepsw)} icon={seepsw ? faEye : faEyeSlash} color="midnightblue"/>
                         
                     </div>
                     
                     <Button type="Submit" loading = {loading} label={loading ? "Signing In..": "Sign In"} />
-                    <h1 >Forgot Password .. ?</h1>
+                    <h1 ><b onClick={() => navigate("/forgot")} className="text-[#191970] hover:underline cursor-pointer">Forgot Password ... ?</b> </h1>
                     <h1>Don't Have a account..? <b onClick={()=> navigate("/signup")} className="text-[#191970] hover:underline cursor-pointer">SIGN UP</b></h1>
                 </form>
             </div>

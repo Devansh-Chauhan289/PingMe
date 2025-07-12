@@ -7,7 +7,7 @@ import { useEffect, useState, useRef } from "react";
 import { io } from "socket.io-client";
 
 export const Dashboard = () => {
-
+    let URL = import.meta.env.VITE_SERVER_URL
     const [socket, setSocket] = useState(null);
     const [user, setUser] = useState(() => {
         const storedUser = localStorage.getItem("user");
@@ -28,7 +28,7 @@ export const Dashboard = () => {
     useEffect(() => {
         if (user && user._id) {
             console.log("Initializing socket connection for user:", user._id);
-            const newSocket = io("https://pingme-server-fdyz.onrender.com", {
+            const newSocket = io(`${URL}`, {
                 transports: ['websocket', 'polling'],
                 reconnection: true,
                 reconnectionAttempts: 5,
@@ -106,7 +106,7 @@ export const Dashboard = () => {
 
     async function getconvo(userId) {
         console.log(userId);
-        const res = await fetch(`https://pingme-server-fdyz.onrender.com/getconvo/${userId}`, {
+        const res = await fetch(`${URL}/getconvo/${userId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -132,7 +132,7 @@ export const Dashboard = () => {
         }
         
         try {
-            const res = await fetch(`https://pingme-server-fdyz.onrender.com/getmsg/${convoId}?senderId=${user._id}&receiverId=${userData.id}`, {
+            const res = await fetch(`${URL}/getmsg/${convoId}?senderId=${user._id}&receiverId=${userData.id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -168,7 +168,7 @@ export const Dashboard = () => {
         
         console.log("Sending message to:", msg.userData.id);
         try {
-            const res = await fetch(`https://pingme-server-fdyz.onrender.com/message`, {
+            const res = await fetch(`${URL}/message`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -244,7 +244,7 @@ export const Dashboard = () => {
     };
 
     async function getUsers() {
-        const res = await fetch(`https://pingme-server-fdyz.onrender.com/getusers/${user._id}`, {
+        const res = await fetch(`${URL}/getusers/${user._id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -273,7 +273,7 @@ export const Dashboard = () => {
 
     return (
         <>
-            <div className="w-screen flex  ">
+            <div className="flex">
                 <div className="w-[25%] h-screen">
                     <div className="flex justify-center items-center my-8">
                         <img src={avatar} width={75} height={75} />
@@ -284,7 +284,7 @@ export const Dashboard = () => {
                     </div>
                     <hr />
                     <div className="text-blue-400 text-2xl ml-10 mt-10 align-center ">Messages</div>
-                    <div className="ml-10  h-[calc(100vh-200px)] overflow-y-scroll">
+                    <div className="ml-5  h-[calc(100vh-200px)] overflow-y-scroll">
                         {convo.length > 0 ? (
                             
                             convo.map(({userData}) => (
@@ -310,7 +310,7 @@ export const Dashboard = () => {
                         )}
                     </div>
                 </div>
-                <div className="w-[50%] h-screen bg-white flex flex-col justify-center items-center">
+                <div className="w-[50%] h-screen pb-10 bg-white flex flex-col justify-center items-center">
                     {
                          msg && msg.userData && msg.userData.convoId ? (
                     <>
@@ -335,37 +335,50 @@ export const Dashboard = () => {
                                 </>
                             
                             ) : (
-                                <div></div>
+                                <div>No USer</div>
                             )
                         }
                         </div>
 
-                        <div className="w-full overflow-y-scroll mt-10 ">
-                        <div className=" px-10 ">
-                            {   
-                                msg && msg.msg && msg.msg.length > 0 ?(
-                                    
-                                    msg.msg.map((mes,index) => {
-                                        const islstMsg = index === msg.msg.length -1
-                                        return(
-                                                <div
-                                                    key={mes._id}
-                                                    ref={islstMsg ? lstmsg : null}
-                                                    className={`h-auto max-w-[60%]      p-5     mb-5 ${
-                                                        mes.senderId === user._id ? "ml-auto bg-blue-600 rounded-b-xl rounded-tl-xl text-white"
-                                                        :
-                                                        "bg-gray-300 mr-auto rounded-b-xl rounded-tr-xl"
-                                                    }`}
-                                                >
-                                                    {mes.msg}
+                        <div className="w-full overflow-y-scroll mt-10  ">
+                            <div className=" px-10">
+                                {   
+                                    msg && msg.msg && msg.msg.length > 0 ?(
+                                        
+                                            msg.msg.map((mes,index) => {
+                                                const islstMsg = index === msg.msg.length -1
+                                                return(
+                                                        <div
+                                                            key={mes._id}
+                                                            ref={islstMsg ? lstmsg : null}
+                                                            className={`h-auto max-w-[60%]      p-5     mb-5 ${
+                                                                mes.senderId === user._id ? "ml-auto bg-blue-600 rounded-b-xl rounded-tl-xl text-white"
+                                                                :
+                                                                "bg-gray-300 mr-auto rounded-b-xl rounded-tr-xl"
+                                                            }`}
+                                                        >
+                                                            {mes.msg}
+                                                        </div>
+                                                )})
+                                        ) : (
+                                            <div className="h-[500px] p-30">
+                                                <div className="w-fit h-fit m-auto flex flex-col justify-center items-center">
+                                                    <div>
+                                                        <img src={avatar} width={"200"} height={80} />
+                                                    </div>
+                                                    <div className="text-center">
+                                                        <h3 className="text-4xl">{msg.userData.fullname}</h3>
+                                                        <p className="text-xl font-light">
+                                                            {isTyping ? 'Typing...' : onlineUsers.includes(msg.userData.id) ? 'Online' : 'Offline'}
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                        )})
-                                ) : (
-                                    <div>NO Mssg</div>
-                                )
-                            }
+                                                
+                                            </div>
+                                    )
+                                }
+                            </div>
                         </div>
-                    </div>
                         <form className="w-full" onSubmit={sendMsg} >
                             <div className="py-5 w-full flex justify-center align-center items-center">
                                 <Input
