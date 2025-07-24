@@ -1,12 +1,38 @@
 @import "tailwindcss";
 
-@theme{
-  --primary : "#232426";
-  --secondary : "#3B82F6";
-}
 :root {
   --primary: #232426;
   --secondary: #3B82F6;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes SlideInRight {
+  from{
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to{
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.4s ease-in-out forwards;
+}
+
+.slide-in-right{
+  animation: slideInRight 0.4s ease-in-out forwards;
 }
 
 .forget-email{

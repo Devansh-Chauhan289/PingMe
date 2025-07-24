@@ -68,6 +68,11 @@ const SendMsg = async(req,res) => {
         if(convoId === "new" && receiverId){
             console.log("Creating new conversation between:", senderId, "and", receiverId);
             const newConvo = new ConvoModel({ members : [senderId,receiverId]})
+            const user = await Users.findById(senderId)
+            user.set({
+                friends : [...user.friends,receiverId]
+            })
+            await user.save()
             await newConvo.save()
             conversationId = newConvo._id;
             const newMsg = new MsgModel({convoId : newConvo._id,senderId,messages})

@@ -1,10 +1,11 @@
 import avatar from "../../assets/man.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperPlane, faPhone, faMessage} from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane, faPhone, faMessage, faL} from "@fortawesome/free-solid-svg-icons";
 
 import { Input } from "../../components/input";
 import { useEffect, useState, useRef } from "react";
 import { io } from "socket.io-client";
+import { Account } from "./acc";
 
 export const Dashboard = () => {
     let URL = import.meta.env.VITE_SERVER_URL
@@ -13,6 +14,7 @@ export const Dashboard = () => {
         const storedUser = localStorage.getItem("user");
         return storedUser ? JSON.parse(storedUser) : null;
     });
+    const [acc,setacc] = useState(false)
     const [convo, setconvo] = useState([]);
     const [msg, setmsg] = useState({});
     const [mymsg, setmymsg] = useState("");
@@ -273,13 +275,18 @@ export const Dashboard = () => {
 
     return (
         <>
+        
             <div className="flex">
-                <div className="w-[25%] h-screen">
+                <div className={`absolute ${acc ? "slide-in-left" : "slide-in-right"} ${acc ? "block" : "hidden"}`}  >
+                    <Account user={user} open={() => setacc(false)}/>
+                </div>
+                
+                <div className="w-[25%] h-screen " onClick={() => setacc(!acc)}>
                     <div className="flex justify-center items-center my-8">
                         <img src={avatar} width={75} height={75} />
                         <div className="ml-4">
                             <h3 className="text-4xl">{user?.fullname}</h3>
-                            <p className="text-xl font-light cursor-pointer">My Account</p>
+                            <p className="text-xl font-light cursor-pointer" onClick={() => setacc(!acc)}>My Account</p>
                         </div>
                     </div>
                     <hr />
