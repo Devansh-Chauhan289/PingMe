@@ -38,6 +38,7 @@ const GetConvo = async(req,res) => {
             const user = await Users.findById(receiverId)
             return {userData : {
                 id : user._id,
+                pfp : user.pfp,
                 email : user.email,
                 fullname : user.fullname,
                 convoId : con._id
@@ -154,7 +155,8 @@ const GetUsers = async(req,res) => {
             return {
                 fullname : user.fullname,
                 email : user.email,
-                id : user._id
+                id : user._id,
+                pfp : user.pfp || "",
             }
         })
         return res.status(200).json(

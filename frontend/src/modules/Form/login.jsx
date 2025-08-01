@@ -26,6 +26,19 @@ export const Login = () => {
 
     let URL = import.meta.env.VITE_SERVER_URL
 
+
+    function throttle(func, limit) {
+        let lastCall = 0;
+        return function(...args) {
+            const now = new Date().getTime();
+            if (now - lastCall >= limit) {
+                lastCall = now;
+                func(...args);
+            }
+        };
+    }
+
+
     const handleSubmit = async(e) => {
         e.preventDefault()
         setloading(true)
@@ -54,7 +67,7 @@ export const Login = () => {
             
             <div className=" w-full h-screen">
             <div className="m-[auto] rounded-xl mt-[10%] p-[3px] bg-gradient-to-r from-[#662d91] to-[#F9629F] w-[40%]">
-                <form onSubmit={handleSubmit} className="rounded-xl bg-white  w-full h-[auto] flex flex-col justify-space-around gap-10 px-10 py-10">
+                <form onSubmit={throttle(handleSubmit,1000)} className="rounded-xl bg-white  w-full h-[auto] flex flex-col justify-space-around gap-10 px-10 py-10">
                     <h1 className="text-[#1d1160] font-serif text-[300%] text-center font-bold">
                     Already with us..? then Sign In </h1>
 

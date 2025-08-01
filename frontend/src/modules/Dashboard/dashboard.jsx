@@ -256,6 +256,14 @@ export const Dashboard = () => {
         setusers(data);
     }
 
+    const handleProfilePicChange = (newPfp) => {
+        setUser(prev => {
+            const updated = { ...prev, pfp: newPfp };
+            localStorage.setItem("user", JSON.stringify(updated));
+            return updated;
+        });
+    };
+
     useEffect(() => {
         if (user && user._id) {
             getconvo(user._id);
@@ -278,12 +286,15 @@ export const Dashboard = () => {
         
             <div className="flex">
                 <div className={`absolute ${acc ? "slide-in-left" : "slide-in-right"} ${acc ? "block" : "hidden"}`}  >
-                    <Account user={user} open={() => setacc(false)}/>
+                    <Account user={user} open={() => setacc(false)} OnPicChange = {handleProfilePicChange}/>
                 </div>
                 
-                <div className="w-[25%] h-screen " onClick={() => setacc(!acc)}>
+                <div className="w-[25%] h-screen ">
                     <div className="flex justify-center items-center my-8">
-                        <img src={avatar} width={75} height={75} />
+                        <div className="w-25 h-25 rounded-full overflow-hidden border-2">
+                            <img src={user.pfp || avatar} className="cursor-pointer rounded-full w-full h-full object-cover "/>
+                        </div>
+                        
                         <div className="ml-4">
                             <h3 className="text-4xl">{user?.fullname}</h3>
                             <p className="text-xl font-light cursor-pointer" onClick={() => setacc(!acc)}>My Account</p>
@@ -298,10 +309,13 @@ export const Dashboard = () => {
                                 
                                 <div 
                                     onClick={() => fetchConvo(userData.convoId,userData)}
-                                    key={userData.fullname}
+                                    key={userData.id}
                                     className="flex items-center my-8 border-b border-gray-300 cursor-pointer hover:bg-gray-200 p-2 rounded-lg"
                                 >
-                                    <img src={avatar} width={50} height={50} />
+                                    <div className="rounded-full w-20 h-20 overflow-hidden border-2">
+                                        <img src={userData.pfp || avatar} width={80} height={50} className="w-full h-full object-center object-cover" />
+                                    </div>
+                                    
                                     <div className="ml-4">
                                         <h3 className="text-4xl">{userData.fullname}</h3>
                                         <p className="text-xl font-light">{userData.email}</p>
@@ -317,7 +331,7 @@ export const Dashboard = () => {
                         )}
                     </div>
                 </div>
-                <div className="w-[50%] h-screen pb-10 bg-white flex flex-col justify-center items-center">
+                <div className="w-[50%] h-screen bg-white flex flex-col justify-center items-center">
                     {
                          msg && msg.userData && msg.userData.convoId ? (
                     <>
@@ -327,8 +341,8 @@ export const Dashboard = () => {
                             msg && msg.userData && msg.userData.convoId ? (
                                 
                                 <>
-                                    <div>
-                                        <img src={avatar} width={50} height={50} />
+                                    <div className="w-18 h-18 rounded-full overflow-hidden border-2">
+                                        <img src={msg.userData.pfp || avatar} className="w-full h-full object-cover object-cente" />
                                     </div>
                                     <div className="mr-auto">
                                         <h3 className="text-4xl">{msg.userData.fullname}</h3>
@@ -347,7 +361,7 @@ export const Dashboard = () => {
                         }
                         </div>
 
-                        <div className="w-full overflow-y-scroll mt-10  ">
+                        <div className="w-full overflow-y-scroll  ">
                             <div className=" px-10">
                                 {   
                                     msg && msg.msg && msg.msg.length > 0 ?(
@@ -358,7 +372,7 @@ export const Dashboard = () => {
                                                         <div
                                                             key={mes._id}
                                                             ref={islstMsg ? lstmsg : null}
-                                                            className={`h-auto max-w-[60%]      p-5     mb-5 ${
+                                                            className={`h-auto max-w-[60%] p-5 mb-5 ${
                                                                 mes.senderId === user._id ? "ml-auto bg-blue-600 rounded-b-xl rounded-tl-xl text-white"
                                                                 :
                                                                 "bg-gray-300 mr-auto rounded-b-xl rounded-tr-xl"
@@ -370,8 +384,8 @@ export const Dashboard = () => {
                                         ) : (
                                             <div className="h-[500px] p-30">
                                                 <div className="w-fit h-fit m-auto flex flex-col justify-center items-center">
-                                                    <div>
-                                                        <img src={avatar} width={"200"} height={80} />
+                                                    <div className="w-40 h-40 rounded-full overflow-hidden mb-5">
+                                                        <img src={msg.userData.pfp || avatar} className="w-full h-full object-cover object-center" />
                                                     </div>
                                                     <div className="text-center">
                                                         <h3 className="text-4xl">{msg.userData.fullname}</h3>
@@ -423,10 +437,13 @@ export const Dashboard = () => {
                             
                                 <div 
                                     onClick={() => fetchConvo("new",ele)}
-                                    key={ele.fullname}
+                                    key={ele.id}
                                     className="flex items-center my-8 border-b border-gray-300 cursor-pointer hover:bg-gray-200 p-2 rounded-lg"
-                                >
-                                    <img src={avatar} width={50} height={50} />
+                                >   
+                                    <div className="w-20 h-20 rounded-full overflow-hidden border-2">
+                                        <img src={ele.pfp || avatar} className="w-full h-full object-cover object-center" />
+                                    </div>
+                                    
                                     <div className="ml-4">
                                         <h3 className="text-4xl">{ele.fullname}</h3>
                                         <p className="text-xl font-light">{ele.email}</p>
