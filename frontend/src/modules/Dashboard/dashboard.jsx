@@ -291,8 +291,8 @@ export const Dashboard = () => {
                 
                 <div className="w-[25%] h-screen ">
                     <div className="flex justify-center items-center my-8">
-                        <div className="w-25 h-25 rounded-full overflow-hidden border-2">
-                            <img src={avatar} className="cursor-pointer rounded-full w-full h-full object-cover "/>
+                        <div className="w-25 h-25 rounded-full overflow-hidden">
+                            <img src={user.pfp || avatar} className="cursor-pointer rounded-full w-full h-full object-cover "/>
                         </div>
                         
                         <div className="ml-4">
@@ -312,11 +312,11 @@ export const Dashboard = () => {
                                     key={userData.id}
                                     className="flex items-center my-8 border-b border-gray-300 cursor-pointer hover:bg-gray-200 p-2 rounded-lg"
                                 >
-                                    <div className="rounded-full w-20 h-20 overflow-hidden border-2">
-                                        <img src={avatar} width={80} height={50} className="w-full h-full object-center object-cover" />
+                                    <div className="rounded-full w-20 h-20 overflow-hidden">
+                                        <img src={userData.pfp || avatar} className="w-full h-full object-center object-cover" />
                                     </div>
                                     
-                                    <div className="ml-4">
+                                    <div className="ml-4 overflow-hidden">
                                         <h3 className="text-4xl">{userData.fullname}</h3>
                                         <p className="text-xl font-light">{userData.email}</p>
                                         <p className="text-sm text-gray-500">
@@ -342,7 +342,7 @@ export const Dashboard = () => {
                                 
                                 <>
                                     <div className="w-18 h-18 rounded-full overflow-hidden border-2">
-                                        <img src={avatar} className="w-full h-full object-cover object-cente" />
+                                        <img src={msg.userData.pfp || avatar} className="w-full h-full object-cover object-cente" />
                                     </div>
                                     <div className="mr-auto">
                                         <h3 className="text-4xl">{msg.userData.fullname}</h3>
@@ -385,7 +385,7 @@ export const Dashboard = () => {
                                             <div className="h-[500px] p-30">
                                                 <div className="w-fit h-fit m-auto flex flex-col justify-center items-center">
                                                     <div className="w-40 h-40 rounded-full overflow-hidden mb-5">
-                                                        <img src={avatar} className="w-full h-full object-cover object-center" />
+                                                        <img src={msg.userData.pfp || avatar} className="w-full h-full object-cover object-center" />
                                                     </div>
                                                     <div className="text-center">
                                                         <h3 className="text-4xl">{msg.userData.fullname}</h3>
