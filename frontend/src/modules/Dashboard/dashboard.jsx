@@ -316,7 +316,7 @@ export const Dashboard = () => {
                                         <img src={userData.pfp || avatar} className="w-full h-full object-center object-cover" />
                                     </div>
                                     
-                                    <div className="ml-4 overflow-hidden">
+                                    <div className="ml-4 w-70 overflow-hidden">
                                         <h3 className="text-4xl">{userData.fullname}</h3>
                                         <p className="text-xl font-light">{userData.email}</p>
                                         <p className="text-sm text-gray-500">
@@ -440,11 +440,11 @@ export const Dashboard = () => {
                                     key={ele.id}
                                     className="flex items-center my-8 border-b border-gray-300 cursor-pointer hover:bg-gray-200 p-2 rounded-lg"
                                 >   
-                                    <div className="w-20 h-20 rounded-full overflow-hidden border-2">
+                                    <div className="w-20 h-20 rounded-full overflow-hidden">
                                         <img src={ele.pfp || avatar} className="w-full h-full object-cover object-center" />
                                     </div>
                                     
-                                    <div className="ml-4">
+                                    <div className="ml-4 w-70 overflow-hidden">
                                         <h3 className="text-4xl">{ele.fullname}</h3>
                                         <p className="text-xl font-light">{ele.email}</p>
                                         <p className="text-sm text-gray-500">
